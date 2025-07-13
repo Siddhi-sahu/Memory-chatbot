@@ -1,6 +1,14 @@
+import { ModeToggle } from "@/components/ModeToggle";
+import PromptSection from "@/components/PromptSection";
 
 export default function Home() {
   return (
-    <div>hii</div>
+    <div>
+      <div className="mr-auto">
+
+      
+      </div>
+      <PromptSection/>
+    </div>
   );
 }
