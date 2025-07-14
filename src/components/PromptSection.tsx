@@ -10,28 +10,49 @@ const PromptSection = () => {
         text: "hii i can remember things about you for you...",
         type: "ai"
     },{
-        text: "hii i am a user",
+        text: "hii i am a user, answer in less than 5 words.",
         type: "human"
-    }]);
+    } 
+]);
     const [prompt, setPrompt] = useState<string | null>(null);
+    const [warning, setWarning] = useState<string | null>(null);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPrompt(e.target.value);
-
+        console.log(prompt)
     };
 
-    const handleSubmit = () => {
-
-    }
-
-    const fetchResponse = async() => {
-        const response = await fetch("/api/memory", {
+    const handleSubmit = async() => {
+        console.log("pressed submit")
+        try{
+            const data = await fetch("/api/memory", {
             method: "POST",
-            body: JSON.stringify({prompt}),
+            body: JSON.stringify({ prompt }),
             headers: {
                 'Content-Type': 'application/json'
             }
-        })
+            });
+            const response = await data.json();
+
+
+            if(!data.ok){
+                setWarning("Something went wrong. Please try again.");
+                console.log("data: ",data);
+            };
+
+            
+        
+            // const formattedMessages = response.text.response
+            // setMessages((prevMessages) => [...prevMessages,])
+            console.log("response from ai ", response);
+            
+
+        }catch(e){
+            console.error(e);
+            console.log("Error while submitting to /memory");
+            setWarning("SomeThing went wrong")
+        };
+
     }
     return (
         <div className=" h-screen flex justify-center ">
@@ -44,10 +65,12 @@ const PromptSection = () => {
 
                  <div className="flex w-full max-w-lg justify-center items-center gap-2">
                     <Input placeholder="Tell me about yourself..." onChange={handleInputChange}/>
-                    <Button type="submit"  className='bg-slate-500 border border-white' onClick={handleSubmit}>
+                    
+                    <Button type='submit' className='bg-slate-500 border border-white px-2 py-1 rounded-md'  onClick={handleSubmit} >
                      Send
                     </Button>
                  </div>
+                    {warning ? <p className='text-red-700'>{warning}</p>: ""}
 
             </div>
 
