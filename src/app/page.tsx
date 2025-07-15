@@ -3,11 +3,8 @@ import PromptSection from "@/components/PromptSection";
 
 export default function Home() {
   return (
-    <div>
-      <div className="mr-auto">
-
+    <div className="overflow-y-hidden">
       
-      </div>
       <PromptSection/>
     </div>
   );
