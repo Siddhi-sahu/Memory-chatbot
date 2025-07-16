@@ -1,10 +1,12 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Messages from './Messages';
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { MessageType } from './Messages';
-//fix chain issue  TODO
+//fix chain issue  TODO: we need sessionId for that, store session id in local storage
+//1. percisting memory for ai and chain
+//2. displaying on the ui past messages
 const PromptSection = () => {
     const [messages, setMessages] = useState<MessageType[]>([{
         text: "hii i can remember things about you for you...",
@@ -16,7 +18,14 @@ const PromptSection = () => {
 ]);
     const [prompt, setPrompt] = useState<string>("");
     const [warning, setWarning] = useState<string | null>(null);
+    const [sessionId, setSessionId] = useState<string | null>(null);
    
+    useEffect(()=>{
+        const storedSessionId = localStorage.getItem("sessionId");
+        if(storedSessionId){
+            setSessionId(storedSessionId);
+        }
+    },[])
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPrompt(e.target.value);
@@ -38,7 +47,7 @@ const PromptSection = () => {
         try{
             const data = await fetch("/api/memory", {
                 method: "POST",
-                body: JSON.stringify({ prompt }),
+                body: JSON.stringify({ prompt, sessionId }),
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -57,6 +66,11 @@ const PromptSection = () => {
                     type: "ai"
                 }
             ]);
+
+            if(!sessionId && response.sessionId){
+                localStorage.setItem("sessionId", response.sessionId)
+
+            }
 
             setPrompt("");
             setWarning("");
