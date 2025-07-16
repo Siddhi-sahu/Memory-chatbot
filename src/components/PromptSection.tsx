@@ -1,10 +1,10 @@
 "use client"
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Messages from './Messages';
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { MessageType } from './Messages';
-//scroll down to the bottom
+//fix chain issue  TODO
 const PromptSection = () => {
     const [messages, setMessages] = useState<MessageType[]>([{
         text: "hii i can remember things about you for you...",
@@ -14,12 +14,9 @@ const PromptSection = () => {
         type: "human"
     } 
 ]);
-    const [prompt, setPrompt] = useState<string | null>(null);
+    const [prompt, setPrompt] = useState<string>("");
     const [warning, setWarning] = useState<string | null>(null);
-
-    useEffect(()=>{
-        
-    },[messages])
+   
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPrompt(e.target.value);
@@ -33,7 +30,7 @@ const PromptSection = () => {
         }
     }
     
-    const handleSubmit = async() => {        
+    const handleSubmit = async() => {     
         if(!prompt){
             setWarning("Prompt is required.");
             return;
@@ -54,17 +51,16 @@ const PromptSection = () => {
                 console.log("data: ",data);
                 return;
             };
-            //push prompt and ai response?
-            // console.log("response from ai ", response);
             setMessages((prevMessages) => [...prevMessages, { text: prompt, type: "human"},
                 {
                     text: response.text.response,
                     type: "ai"
                 }
             ]);
+
             setPrompt("");
-            setWarning("");   
-            console.log("prompt after sybmit: ",prompt)
+            setWarning("");
+            
         }catch(e){
             console.error(e);
             console.log("Error while submitting to /memory");
@@ -72,7 +68,9 @@ const PromptSection = () => {
             return;
         };
 
-    }
+    };
+
+    
     return (
         <div className=" h-screen flex justify-center ">
         <div className="flex max-w-5xl w-full mx-auto bg-black">
@@ -83,7 +81,7 @@ const PromptSection = () => {
                 </div>
 
                  <div className="flex w-full max-w-lg justify-center items-center gap-2">
-                    <Input placeholder="Tell me about yourself..." onChange={handleInputChange} onKeyDown={handlekeySubmit}/>
+                    <Input placeholder="Tell me about yourself..." value={prompt} onChange={handleInputChange} onKeyDown={handlekeySubmit}/>
                     
                     <Button type='submit' className='bg-slate-500 border border-white px-2 py-1 rounded-md'  onClick={handleSubmit} >
                      Send

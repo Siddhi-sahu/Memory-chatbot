@@ -35,11 +35,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <div className="flex items-center px-4 py-2">
-              <div className="ml-auto">
-                <ModeToggle />
-              </div>
-             </div>
+            
             
              {children}
           </ThemeProvider>
