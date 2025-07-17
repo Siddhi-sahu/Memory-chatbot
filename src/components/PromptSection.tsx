@@ -11,21 +11,46 @@ const PromptSection = () => {
     const [messages, setMessages] = useState<MessageType[]>([{
         text: "hii i can remember things about you for you...",
         type: "ai"
-    },{
-        text: "hii i am a user, answer in less than 5 words.",
-        type: "human"
-    } 
+    }
 ]);
     const [prompt, setPrompt] = useState<string>("");
-    const [warning, setWarning] = useState<string | null>(null);
+    const [warning, setWarning] = useState<string>("");
     const [sessionId, setSessionId] = useState<string | null>(null);
+    const hasFetchedMessages = useRef(false);
    
     useEffect(()=>{
         const storedSessionId = localStorage.getItem("sessionId");
-        if(storedSessionId){
+        if(storedSessionId && !sessionId){
             setSessionId(storedSessionId);
+        };
+
+        if(storedSessionId){
+            console.log("in fetch messages")
+            if(!hasFetchedMessages.current){
+            fetchMessages(storedSessionId);
         }
-    },[])
+
+        }    
+    },[]);
+
+    const fetchMessages = async(sessionId: string) =>{
+        const response = await fetch(`/api/getmessages?sessionId=${sessionId}`);
+
+        const data = await response.json();
+
+        console.log("messages: ", data.messages);
+
+        if(data.messages){
+            const formattedMessages = data.messages.map((msg: any)=>({
+                text: msg.kwargs.content,
+                type: msg.id.includes("HumanMessage") ? "human" : "ai"
+            }));
+
+            setMessages((prevMessage) => [...prevMessage, ...formattedMessages])
+
+        }
+
+    }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPrompt(e.target.value);
@@ -86,9 +111,9 @@ const PromptSection = () => {
 
     
     return (
-        <div className=" h-screen flex justify-center ">
-        <div className="flex max-w-5xl w-full mx-auto bg-black">
-
+        <div className="h-screen flex justify-center ">
+            
+        <div className="flex max-w-5xl w-full mx-auto">
             <div className='flex flex-col justify-center items-center max-w-4xl w-full'>
                 <div className='flex w-full max-w-lg justify-center items-center mb-5'>
                 <Messages messages={messages}/>
