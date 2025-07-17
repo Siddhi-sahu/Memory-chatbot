@@ -69,10 +69,10 @@ const PromptSection = () => {
         try{
             const data = await fetch("/api/memory", {
                 method: "POST",
-                body: JSON.stringify({ prompt, sessionId: localStorage.getItem("sessionId") }),
                 headers: {
                     'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify({ prompt, sessionId: localStorage.getItem("sessionId") }),
             });
             const response = await data.json();
             
