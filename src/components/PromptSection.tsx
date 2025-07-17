@@ -19,16 +19,13 @@ const PromptSection = () => {
     const hasFetchedMessages = useRef(false);
    
     useEffect(()=>{
+        if(!hasFetchedMessages.current){
         const storedSessionId = localStorage.getItem("sessionId");
-        if(storedSessionId && !sessionId){
-            setSessionId(storedSessionId);
-        };
-
         if(storedSessionId){
-            console.log("in fetch messages")
-            if(!hasFetchedMessages.current){
+            setSessionId(storedSessionId);
             fetchMessages(storedSessionId);
         }
+        hasFetchedMessages.current = true
 
         }    
     },[]);
@@ -41,7 +38,7 @@ const PromptSection = () => {
         console.log("messages: ", data.messages);
 
         if(data.messages){
-            const formattedMessages = data.messages.map((msg: any)=>({
+            const formattedMessages: MessageType[] = data.messages.map((msg: ReturnType<typeof data.messages>)=>({
                 text: msg.kwargs.content,
                 type: msg.id.includes("HumanMessage") ? "human" : "ai"
             }));
