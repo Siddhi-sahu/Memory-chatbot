@@ -35,8 +35,6 @@ const PromptSection = () => {
 
         const data = await response.json();
 
-        console.log("messages: ", data.messages);
-
         if(data.messages){
             const formattedMessages: MessageType[] = data.messages.map((msg: ReturnType<typeof data.messages>)=>({
                 text: msg.kwargs.content,
@@ -74,14 +72,15 @@ const PromptSection = () => {
                 },
                 body: JSON.stringify({ prompt, sessionId: localStorage.getItem("sessionId") }),
             });
-            const response = await data.json();
-            
             
             if(!data.ok){
                 setWarning("Something went wrong. Please try again.");
                 console.log("data: ",data);
+                const text = await data.text();
+                console.error(`Error ${data.status}: ${text}`);
                 return;
             };
+            const response = await data.json();
             setMessages((prevMessages) => [...prevMessages, { text: prompt, type: "human"},
                 {
                     text: response.text.response,
