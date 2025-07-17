@@ -69,7 +69,7 @@ const PromptSection = () => {
         try{
             const data = await fetch("/api/memory", {
                 method: "POST",
-                body: JSON.stringify({ prompt, sessionId }),
+                body: JSON.stringify({ prompt, sessionId: localStorage.getItem("sessionId") }),
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -100,7 +100,7 @@ const PromptSection = () => {
         }catch(e){
             console.error(e);
             console.log("Error while submitting to /memory");
-            setWarning("SomeThing went wrong");
+            setWarning("Something went wrong");
             return;
         };
 
