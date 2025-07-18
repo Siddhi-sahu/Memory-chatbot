@@ -1,5 +1,3 @@
-//need to send openai response with memory
-
 import { ChatOpenAI } from "@langchain/openai";
 import { BufferMemory } from "langchain/memory";
 import { ConversationChain } from "langchain/chains";

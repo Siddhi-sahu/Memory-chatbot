@@ -65,7 +65,7 @@ const PromptSection = () => {
             return;
         }
         try{
-            const data = await fetch("/api/memory", {
+            const data = await fetch("/api/chat", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
@@ -98,7 +98,7 @@ const PromptSection = () => {
             
         }catch(e){
             console.error(e);
-            console.log("Error while submitting to /memory");
+            console.log("Error while submitting to /chat");
             setWarning("Something went wrong");
             return;
         };
