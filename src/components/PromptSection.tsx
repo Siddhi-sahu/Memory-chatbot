@@ -81,18 +81,16 @@ const PromptSection = () => {
                 return;
             };
             const response = await data.json();
+            if(!sessionId && response.sessionId){
+                localStorage.setItem("sessionId", response.sessionId)
+
+            }
             setMessages((prevMessages) => [...prevMessages, { text: prompt, type: "human"},
                 {
                     text: response.text.response,
                     type: "ai"
                 }
             ]);
-
-            if(!sessionId && response.sessionId){
-                localStorage.setItem("sessionId", response.sessionId)
-
-            }
-
             setPrompt("");
             setWarning("");
             

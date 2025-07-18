@@ -49,7 +49,7 @@ export async function POST(req: Request){
 
         console.log("response from ai: ", response);
 
-        return NextResponse.json({ text: response }, {status: 200})
+        return NextResponse.json({ text: response, sessionId }, {status: 200})
          
     }catch(e){
         console.error(e);
